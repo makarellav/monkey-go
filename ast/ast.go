@@ -34,6 +34,14 @@ func (p *Program) String() string {
 	return sb.String()
 }
 
+func (p *Program) TokenLiteral() string {
+	if len(p.Statements) > 0 {
+		return p.Statements[0].TokenLiteral()
+	}
+
+	return ""
+}
+
 type Identifier struct {
 	Token token.Token
 	Value string
@@ -147,10 +155,25 @@ func (pe *PrefixExpression) String() string {
 	return sb.String()
 }
 
-func (p *Program) TokenLiteral() string {
-	if len(p.Statements) > 0 {
-		return p.Statements[0].TokenLiteral()
-	}
+type InfixExpression struct {
+	Token    token.Token
+	Left     Expression
+	Operator string
+	Right    Expression
+}
 
-	return ""
+func (ie *InfixExpression) expressionNode() {}
+func (ie *InfixExpression) TokenLiteral() string {
+	return ie.Token.Literal
+}
+func (ie *InfixExpression) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("(")
+	sb.WriteString(ie.Left.String())
+	sb.WriteString(" " + ie.Operator + " ")
+	sb.WriteString(ie.Right.String())
+	sb.WriteString(")")
+
+	return sb.String()
 }
